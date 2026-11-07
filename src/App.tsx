@@ -4,7 +4,7 @@ import Login from './pages/Login';
 import Favorites from './pages/Favorites';
 import Offer from './pages/Offer';
 import NotFound from './pages/NotFound';
-import PrivateRoute from './component/privateRoute/PrivateRoute';
+import PrivateRoute from './component/private-route/private-route';
 import type { Offer as OfferType } from './types/offer';
 
 type AppProps = {
