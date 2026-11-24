@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import CitiesList from './component/cities-list/Cities-list';
+import CitiesList from './component/cities-list/cities-list';
 import OffersList from './component/offersList/OffersList';
 import Map from './component/map/Map';
 import { CITIES, CITY_NAMES } from './const';
