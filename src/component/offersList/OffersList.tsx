@@ -7,16 +7,25 @@ type OffersListProps = {
   offers: Offer[];
   variant?: PlaceCardVariant;
   listClassName?: string;
+  activeOfferId?: string | null;
+  onCardHover?: (id: string | null) => void;
 };
 
 function OffersList({
   offers,
   variant = 'cities',
   listClassName = 'cities__places-list places__list tabs__content',
+  activeOfferId,
+  onCardHover,
 }: OffersListProps): JSX.Element {
-  const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
+  const [hoveredOfferId, setHoveredOfferId] = useState<string | null>(null);
 
-  const handleCardHover = (id: string | null) => setActiveOfferId(id);
+  const currentActiveOfferId = activeOfferId === undefined ? hoveredOfferId : activeOfferId;
+
+  const handleCardHover = (id: string | null) => {
+    setHoveredOfferId(id);
+    onCardHover?.(id);
+  };
 
   return (
     <div className={listClassName}>
@@ -25,7 +34,7 @@ function OffersList({
           key={offer.id}
           offer={offer}
           variant={variant}
-          isActive={offer.id === activeOfferId}
+          isActive={offer.id === currentActiveOfferId}
           onCardHover={handleCardHover}
         />
       ))}

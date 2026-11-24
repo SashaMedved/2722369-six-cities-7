@@ -1,12 +1,15 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import CitiesList from './component/cities-list/cities-list';
 import OffersList from './component/offersList/OffersList';
 import Map from './component/map/Map';
-import { CITIES, CITY_NAMES } from './const';
+import Sorting from './component/sorting/sorting';
+import { CITIES, CITY_NAMES, DEFAULT_SORTING } from './const';
 import { changeCity } from './store/action';
+import { sortOffers } from './utils/sorting';
 import type { CityName } from './types/offer';
+import type { SortingOption } from './types/sorting';
 import type { State } from './types/state';
 
 function Main(): JSX.Element {
@@ -14,13 +17,29 @@ function Main(): JSX.Element {
   const offers = useSelector((state: State) => state.offers);
   const dispatch = useDispatch();
 
+  const [currentSorting, setCurrentSorting] = useState<SortingOption>(DEFAULT_SORTING);
+  const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
+
   const cityOffers = useMemo(
     () => offers.filter((offer) => offer.city.name === city),
     [offers, city],
   );
 
+  const sortedOffers = useMemo(
+    () => sortOffers(cityOffers, currentSorting),
+    [cityOffers, currentSorting],
+  );
+
   const handleCityChange = (newCity: CityName) => {
     dispatch(changeCity(newCity));
+  };
+
+  const handleSortingChange = (sorting: SortingOption) => {
+    setCurrentSorting(sorting);
+  };
+
+  const handleCardHover = (id: string | null) => {
+    setActiveOfferId(id);
   };
 
   return (
@@ -69,27 +88,20 @@ function Main(): JSX.Element {
           <div className="cities__places-container container">
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{cityOffers.length} places to stay in {city}</b>
-              <form className="places__sorting" action="#" method="get">
-                <span className="places__sorting-caption">Sort by</span>
-                <span className="places__sorting-type" tabIndex={0}>
-                  Popular
-                  <svg className="places__sorting-arrow" width="7" height="4">
-                    <use xlinkHref="#icon-arrow-select" />
-                  </svg>
-                </span>
-                <ul className="places__options places__options--custom places__options--opened">
-                  <li className="places__option places__option--active" tabIndex={0}>Popular</li>
-                  <li className="places__option" tabIndex={0}>Price: low to high</li>
-                  <li className="places__option" tabIndex={0}>Price: high to low</li>
-                  <li className="places__option" tabIndex={0}>Top rated first</li>
-                </ul>
-              </form>
-              <OffersList offers={cityOffers} />
+              <b className="places__found">{sortedOffers.length} places to stay in {city}</b>
+              <Sorting
+                currentSorting={currentSorting}
+                onSortingChange={handleSortingChange}
+              />
+              <OffersList
+                offers={sortedOffers}
+                activeOfferId={activeOfferId}
+                onCardHover={handleCardHover}
+              />
             </section>
             <div className="cities__right-section">
               <section className="cities__map map">
-                <Map city={CITIES[city]} offers={cityOffers} />
+                <Map city={CITIES[city]} offers={sortedOffers} activeOfferId={activeOfferId} />
               </section>
             </div>
           </div>

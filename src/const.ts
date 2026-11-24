@@ -1,4 +1,5 @@
 import type { City, CityName, OfferType } from './types/offer';
+import type { SortingOption } from './types/sorting';
 
 export const OFFER_TYPE_LABELS: Record<OfferType, string> = {
   apartment: 'Apartment',
@@ -14,6 +15,24 @@ export const MIN_REVIEW_LENGTH = 50;
 export const MAX_REVIEW_LENGTH = 300;
 
 export const URL_MARKER_DEFAULT = 'img/pin.svg';
+
+export const URL_MARKER_ACTIVE = 'img/pin-active.svg';
+
+export const DEFAULT_SORTING: SortingOption = 'popular';
+
+export const SORTING_OPTIONS: SortingOption[] = [
+  'popular',
+  'price-low-to-high',
+  'price-high-to-low',
+  'top-rated-first',
+];
+
+export const SORTING_LABELS: Record<SortingOption, string> = {
+  popular: 'Popular',
+  'price-low-to-high': 'Price: low to high',
+  'price-high-to-low': 'Price: high to low',
+  'top-rated-first': 'Top rated first',
+};
 
 export const CITY_NAMES: CityName[] = [
   'Paris',
